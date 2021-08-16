@@ -7,14 +7,18 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+    "declaration": true,
     "outDir": "./dist",
     "lib": ["ES2019"],
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    
   },
   "include": ["./"],
   "exclude": [
     "node_modules",
     "samples",
-    "tests"
+    "tests",
+    "dist",
+    "coverage",
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "name": "samples",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "formik": "^2.2.9",
+    "react": "^17.0.2",
+    "zod-formik-adapter": "file:../"
+  }
+}
