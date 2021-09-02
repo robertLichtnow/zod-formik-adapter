@@ -31,7 +31,7 @@ export function toFormikValidationSchema<T>(
   return {
     async validate(obj: T) {
       try {
-        await Promise.resolve(schema.parse(obj));
+        await schema.parseAsync(obj);
       } catch (err: unknown) {
         throw createValidationError(err as z.ZodError<T>);
       }
