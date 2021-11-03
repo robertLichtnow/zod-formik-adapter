@@ -16,23 +16,21 @@ $ yarn add zod-formik-adapter
 
 ## Usage
 
-```JSX
-const { z } = require('zod');
-const { Formik } = require('formik');
-const { toFormikValidationSchema } = require('zod-formik-adapter');
-
+```TSX
+import { z } from 'zod';
+import { Formik } from 'formik';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 const Schema = z.object({
   name: z.string(),
   age: z.number(),
 });
 
-function Component = () => (
+const Component = () => (
   <Formik
     validationSchema={toFormikValidationSchema(Schema)}
   >
     {...}
   </Formik>
-)
-
+);
 ```
