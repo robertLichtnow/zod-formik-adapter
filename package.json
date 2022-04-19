@@ -5,9 +5,14 @@
   "main": "./dist/index.js",
   "author": "Matheus Robert Lichtnow <matheusrobert8@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robertLichtnow/zod-formik-adapter"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest --coverage",
+    "test:ci": "jest --ci --coverage",
     "build:clean": "rm -rf dist && yarn build"
   },
   "devDependencies": {
@@ -24,5 +29,9 @@
     "formik": "^2.2.9",
     "react": "^17.0.2",
     "zod": "~3.7.2"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   }
 }
