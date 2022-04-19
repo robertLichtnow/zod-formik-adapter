@@ -1,5 +1,7 @@
 # zod-formik-adapter
 
+[![codecov](https://codecov.io/gh/robertLichtnow/zod-formik-adapter/branch/master/graph/badge.svg?token=Z5V1VKCGV9)](https://codecov.io/gh/robertLichtnow/zod-formik-adapter)
+
 This library adapts a [zod](https://www.npmjs.com/package/zod) schema to work as a `validationSchema` prop on [Formik](https://www.npmjs.com/package/formik)
 
 **IMPORTANT: Currently, this library does not work with zod union. See more [here](https://github.com/robertLichtnow/zod-formik-adapter/issues/2).**
