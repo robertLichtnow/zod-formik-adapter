@@ -1,0 +1,26 @@
+name: Merge
+on:
+  push:
+    branches:
+      - master
+jobs:
+  release:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test
+        run: yarn test:ci
+      - name: Download codecov
+        run: curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov
+      - name: Run codecov
+        run: ./codecov

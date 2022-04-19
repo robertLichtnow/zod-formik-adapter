@@ -1,11 +1,10 @@
-name: Release
+name: Pull Request
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    types: [opened, reopened]
 jobs:
   release:
-    name: Release
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,11 +17,5 @@ jobs:
           node-version: 12
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-
-      - name: Build distributable
-        run: yarn build
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+      - name: Test
+        run: yarn test:ci
