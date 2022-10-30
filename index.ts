@@ -27,14 +27,28 @@ function createValidationError(e: z.ZodError) {
  */
 export function toFormikValidationSchema<T>(
   schema: z.ZodSchema<T>,
-  params?: Partial<z.ParseParams>,
-): { validate: (obj: T) => Promise<void> } {
+  params?: Partial<z.ParseParams>
+): {
+  validate: (obj: T) => Promise<void>;
+  validateAt: (path: string, obj: T) => Promise<void>;
+} {
   return {
     async validate(obj: T) {
       try {
         await schema.parseAsync(obj, params);
       } catch (err: unknown) {
         throw createValidationError(err as z.ZodError<T>);
+      }
+    },
+    async validateAt(path: string, obj: T) {
+      try {
+        await schema.parseAsync(obj, params);
+      } catch (err: unknown) {
+        const error = createValidationError(err as z.ZodError<T>);
+        const innerError = error.inner.find((e) => e.path === path);
+        if (innerError) {
+          throw innerError;
+        }
       }
     },
   };
