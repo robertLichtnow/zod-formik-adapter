@@ -23,7 +23,7 @@ function createValidationError(e: z.ZodError) {
 /**
  * Wrap your zod schema in this function when providing it to Formik's validation schema prop
  * @param schema The zod schema
- * @returns An object containing the `validate` method expected by Formik
+ * @returns An object containing the `validate` and `validateAt` methods expected by Formik
  */
 export function toFormikValidationSchema<T>(
   schema: z.ZodSchema<T>,
