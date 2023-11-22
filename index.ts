@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { notEmpty } from "./utils.ts"
 
 export class ValidationError extends Error {
   public name = "ValidationError";
@@ -44,7 +45,7 @@ function createValidationResult(error: z.ZodError) {
   const result: Record<string, string> = {};
 
   for (const x of error.errors) {
-    result[x.path.filter(Boolean).join(".")] = x.message;
+    result[x.path.filter(notEmpty).join(".")] = x.message;
   }
 
   return result;
