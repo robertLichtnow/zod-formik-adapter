@@ -27,7 +27,7 @@ function createValidationError(e: z.ZodError) {
  */
 export function toFormikValidationSchema<T>(
   schema: z.ZodSchema<T>,
-  params?: Partial<z.ParseParams>,
+  params?: Partial<z.ParseParams>
 ): { validate: (obj: T) => Promise<void> } {
   return {
     async validate(obj: T) {
@@ -44,7 +44,7 @@ function createValidationResult(error: z.ZodError) {
   const result: Record<string, string> = {};
 
   for (const x of error.errors) {
-    result[x.path.filter(Boolean).join(".")] = x.message;
+    result[x.path.filter(isNotNill).join(".")] = x.message;
   }
 
   return result;
@@ -65,4 +65,8 @@ export function toFormikValidate<T>(
       return createValidationResult(result.error);
     }
   };
+}
+
+function isNotNill<T>(value: T): value is NonNullable<T> {
+  return value !== null && value !== undefined;
 }
