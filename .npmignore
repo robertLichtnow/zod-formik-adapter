@@ -4,6 +4,6 @@ examples
 tests
 *.ts
 !*.d.ts
-jest.config.js
+jest.config.ts
 tsconfig.json
-yarn.lock
+bun.lock
