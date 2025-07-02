@@ -16,6 +16,6 @@ jobs:
         with:
           node-version: 16
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
       - name: Test
-        run: yarn test:ci
+        run: bun test:ci

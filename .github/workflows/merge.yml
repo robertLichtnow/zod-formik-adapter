@@ -17,9 +17,9 @@ jobs:
         with:
           node-version: 16
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
       - name: Test
-        run: yarn test:ci
+        run: bun test:ci
       - name: Download codecov
         run: curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov
       - name: Run codecov
