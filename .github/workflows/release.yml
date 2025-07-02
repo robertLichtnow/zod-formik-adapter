@@ -15,10 +15,10 @@ jobs:
         with:
           node-version: 16
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Build distributable
-        run: yarn build
+        run: bun build
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

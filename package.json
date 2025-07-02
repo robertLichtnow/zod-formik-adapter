@@ -10,27 +10,23 @@
     "url": "https://github.com/robertLichtnow/zod-formik-adapter"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --jsx react",
     "test": "jest --coverage",
     "test:ci": "jest --ci --coverage",
-    "build:clean": "rm -rf dist && yarn build"
+    "build:clean": "rm -rf dist && bun run build"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
-    "formik": "~2.2.9",
-    "jest": "^27.0.6",
-    "react": "~17.0.2",
-    "semantic-release": "^17.4.5",
-    "ts-jest": "^27.0.4",
-    "typescript": "~4.6.3",
-    "zod": "^3.22.4"
+    "@types/jest": "30.0.0",
+    "formik": "2.4.6",
+    "jest": "30.0.3",
+    "react": "19.1.0",
+    "semantic-release": "24.2.6",
+    "ts-jest": "29.4.0",
+    "typescript": "5.8.3",
+    "zod": "3.25.67"
   },
   "peerDependencies": {
-    "formik": "^2.2.9",
-    "zod": "^3.22.4"
-  },
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true
+    "formik": "2.2.9",
+    "zod": "3.22.4"
   }
 }
