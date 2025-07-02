@@ -10,10 +10,10 @@
     "url": "https://github.com/robertLichtnow/zod-formik-adapter"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --jsx react",
     "test": "jest --coverage",
     "test:ci": "jest --ci --coverage",
-    "build:clean": "rm -rf dist && yarn build"
+    "build:clean": "rm -rf dist && bun run build"
   },
   "devDependencies": {
     "@types/jest": "30.0.0",
