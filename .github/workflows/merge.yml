@@ -4,7 +4,7 @@ on:
     branches:
       - master
 jobs:
-  release:
+  test:
     name: Code Coverage
     runs-on: ubuntu-latest
     steps:
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 24
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Test
@@ -36,7 +36,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 24
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build
