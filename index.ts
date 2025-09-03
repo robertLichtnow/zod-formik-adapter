@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { core, z } from "zod/v4";
 
 export class ValidationError extends Error {
   public name = "ValidationError";
@@ -12,7 +12,7 @@ export class ValidationError extends Error {
 
 function createValidationError(e: z.ZodError) {
   const error = new ValidationError(e.message);
-  error.inner = e.errors.map((err) => ({
+  error.inner = e.issues.map((err) => ({
     message: err.message,
     path: err.path.join("."),
   }));
@@ -27,7 +27,7 @@ function createValidationError(e: z.ZodError) {
  */
 export function toFormikValidationSchema<T>(
   schema: z.ZodSchema<T>,
-  params?: Partial<z.ParseParams>,
+  params?: Partial<core.ParseContext<core.$ZodIssue>>
 ): { validate: (obj: T) => Promise<void> } {
   return {
     async validate(obj: T) {
@@ -43,7 +43,7 @@ export function toFormikValidationSchema<T>(
 function createValidationResult(error: z.ZodError) {
   const result: Record<string, string> = {};
 
-  for (const x of error.errors) {
+  for (const x of error.issues) {
     result[x.path.filter(Boolean).join(".")] = x.message;
   }
 
@@ -57,7 +57,7 @@ function createValidationResult(error: z.ZodError) {
  */
 export function toFormikValidate<T>(
   schema: z.ZodSchema<T>,
-  params?: Partial<z.ParseParams>
+  params?: Partial<core.ParseContext<core.$ZodIssue>>
 ) {
   return async (values: T) => {
     const result = await schema.safeParseAsync(values, params);

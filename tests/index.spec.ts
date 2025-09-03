@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { toFormikValidationSchema, toFormikValidate } from '../index';
+import { toFormikValidationSchema, toFormikValidate } from "../index";
 
 describe("toFormikValidationSchema", () => {
   it("should pass validate without errors", async () => {
@@ -7,7 +7,7 @@ describe("toFormikValidationSchema", () => {
     const object = { name: "mock", age: 32 };
     const { schema } = makeSut();
     const { validate } = toFormikValidationSchema(schema);
-    
+
     // when
     const errors = await validate(object);
 
@@ -24,19 +24,17 @@ describe("toFormikValidationSchema", () => {
     const error = {} as any;
     error.inner = [
       {
-        path:"name",
-        message: "Required",
+        path: "name",
+        message: "Invalid input: expected string, received undefined",
       },
       {
         path: "age",
-        message: "Expected number, received string",
-      }
-    ]
+        message: "Invalid input: expected number, received string",
+      },
+    ];
 
     // when
-    await expect(
-      validate(object),
-    ).rejects.toMatchObject(error);
+    await expect(validate(object)).rejects.toMatchObject(error);
   });
 });
 
@@ -46,7 +44,7 @@ describe("toFormikValidate", () => {
     const object = { name: "mock", age: 32 };
     const { schema } = makeSut();
     const validate = toFormikValidate(schema);
-    
+
     // when
     const errors = await validate(object);
 
@@ -61,19 +59,17 @@ describe("toFormikValidate", () => {
     const validate = toFormikValidate(schema);
 
     const error = {
-      name: "Required",
-      age: "Expected number, received string"
+      name: "Invalid input: expected string, received undefined",
+      age: "Invalid input: expected number, received string",
     };
 
     // when
-    const errors = await validate(object)
+    const errors = await validate(object);
 
     // then
     expect(errors).toMatchObject(error);
   });
 });
-
-
 
 function makeSut() {
   const schema = z.object({
@@ -83,5 +79,5 @@ function makeSut() {
 
   return {
     schema,
-  }
+  };
 }
