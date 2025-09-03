@@ -11,7 +11,7 @@
     "outDir": "./dist",
     "lib": ["ES2019"],
     "skipDefaultLibCheck": true,
-    
+    "moduleResolution": "node"
   },
   "include": ["./"],
   "exclude": [
@@ -20,5 +20,6 @@
     "tests",
     "dist",
     "coverage",
+    "**/*.spec.ts",
   ]
 }
