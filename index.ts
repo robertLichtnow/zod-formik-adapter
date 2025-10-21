@@ -1,4 +1,5 @@
 import { core, z } from "zod/v4";
+import { type ZodMiniType } from "zod/mini";
 
 export class ValidationError extends Error {
   public name = "ValidationError";
@@ -26,7 +27,7 @@ function createValidationError(e: z.ZodError) {
  * @returns An object containing the `validate` method expected by Formik
  */
 export function toFormikValidationSchema<T>(
-  schema: z.ZodSchema<T>,
+  schema: z.ZodType<T> | ZodMiniType<T>,
   params?: Partial<core.ParseContext<core.$ZodIssue>>
 ): { validate: (obj: T) => Promise<void> } {
   return {
@@ -40,7 +41,7 @@ export function toFormikValidationSchema<T>(
   };
 }
 
-function createValidationResult(error: z.ZodError) {
+function createValidationResult(error: core.$ZodError) {
   const result: Record<string, string> = {};
 
   for (const x of error.issues) {
@@ -56,7 +57,7 @@ function createValidationResult(error: z.ZodError) {
  * @returns An validate function as expected by Formik
  */
 export function toFormikValidate<T>(
-  schema: z.ZodSchema<T>,
+  schema: z.ZodType<T> | ZodMiniType<T>,
   params?: Partial<core.ParseContext<core.$ZodIssue>>
 ) {
   return async (values: T) => {
