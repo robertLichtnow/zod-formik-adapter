@@ -11,7 +11,7 @@ export class ValidationError extends Error {
   }
 }
 
-function createValidationError(e: z.ZodError) {
+function createValidationError(e: core.$ZodError) {
   const error = new ValidationError(e.message);
   error.inner = e.issues.map((err) => ({
     message: err.message,
@@ -35,7 +35,7 @@ export function toFormikValidationSchema<T>(
       try {
         await schema.parseAsync(obj, params);
       } catch (err: unknown) {
-        throw createValidationError(err as z.ZodError<T>);
+        throw createValidationError(err as core.$ZodError<T>);
       }
     },
   };
