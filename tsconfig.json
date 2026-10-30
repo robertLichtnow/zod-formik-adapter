@@ -1,17 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2019",
     "module": "commonjs", 
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "declaration": true,
     "outDir": "./dist",
     "lib": ["ES2019"],
     "skipDefaultLibCheck": true,
-    "moduleResolution": "node"
+    "types": ["jest"]
   },
   "include": ["./"],
   "exclude": [
