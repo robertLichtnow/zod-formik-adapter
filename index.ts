@@ -29,9 +29,9 @@ function createValidationError(e: z.ZodError) {
 export function toFormikValidationSchema<T>(
   schema: z.ZodSchema<T>,
   params?: Partial<core.ParseContext<core.$ZodIssue>>
-): { validate: (obj: T) => Promise<void> } {
+): { validate: (obj: unknown) => Promise<void> } {
   return {
-    async validate(obj: T) {
+    async validate(obj: unknown) {
       try {
         await schema.parseAsync(obj, params);
       } catch (err: unknown) {
@@ -74,7 +74,7 @@ export function toFormikValidate<T>(
   schema: z.ZodSchema<T>,
   params?: Partial<core.ParseContext<core.$ZodIssue>>
 ) {
-  return async (values: T) => {
+  return async (values: unknown) => {
     const result = await schema.safeParseAsync(values, params);
     if (!result.success) {
       return createValidationResult(result.error);

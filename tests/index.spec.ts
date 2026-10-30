@@ -46,6 +46,25 @@ describe("toFormikValidationSchema", () => {
     // when
     await expect(validate(object)).rejects.toThrow("unexpected failure");
   });
+
+  it("should accept values that don't match the schema type", async () => {
+    // given
+    const schema = z.object({ ok: z.boolean() });
+    const { validate } = toFormikValidationSchema(schema);
+
+    // when
+    const result = validate({ ok: undefined });
+
+    // then
+    await expect(result).rejects.toMatchObject({
+      inner: [
+        {
+          path: "ok",
+          message: "Invalid input: expected boolean, received undefined",
+        },
+      ],
+    });
+  });
 });
 
 describe("toFormikValidate", () => {
@@ -171,6 +190,20 @@ describe("toFormikValidate", () => {
 
     // when
     await expect(validate(object)).rejects.toThrow("unexpected failure");
+  });
+
+  it("should accept values that don't match the schema type", async () => {
+    // given
+    const schema = z.object({ ok: z.boolean() });
+    const validate = toFormikValidate(schema);
+
+    // when
+    const errors = await validate({ ok: undefined });
+
+    // then
+    expect(errors).toEqual({
+      ok: "Invalid input: expected boolean, received undefined",
+    });
   });
 });
 
