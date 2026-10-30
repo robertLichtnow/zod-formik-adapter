@@ -11,6 +11,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    environment: npm # only master may deploy here; npm trusts this environment only
     steps:
       - name: Checkout
         uses: actions/checkout@v7
