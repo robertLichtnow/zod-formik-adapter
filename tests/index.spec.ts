@@ -69,6 +69,89 @@ describe("toFormikValidate", () => {
     // then
     expect(errors).toMatchObject(error);
   });
+
+  it("should return nested errors for arrays of objects, including index 0", async () => {
+    // given
+    const schema = z.object({
+      items: z.array(z.object({ name: z.string(), age: z.number() })),
+    });
+    const object = {
+      items: [{ name: 1, age: 10 }, { name: "ok", age: 10 }, { name: "ok" }],
+    } as any;
+    const validate = toFormikValidate(schema);
+
+    // when
+    const errors = await validate(object);
+
+    // then
+    expect(errors).toEqual({
+      items: [
+        { name: "Invalid input: expected string, received number" },
+        undefined,
+        { age: "Invalid input: expected number, received undefined" },
+      ],
+    });
+  });
+
+  it("should return nested errors for nested objects", async () => {
+    // given
+    const schema = z.object({
+      address: z.object({ street: z.string(), number: z.number() }),
+    });
+    const object = { address: { street: "ok", number: "1" } } as any;
+    const validate = toFormikValidate(schema);
+
+    // when
+    const errors = await validate(object);
+
+    // then
+    expect(errors).toEqual({
+      address: { number: "Invalid input: expected number, received string" },
+    });
+  });
+
+  it("should return errors for arrays of primitives", async () => {
+    // given
+    const schema = z.object({ tags: z.array(z.string()) });
+    const object = { tags: [1, "ok"] } as any;
+    const validate = toFormikValidate(schema);
+
+    // when
+    const errors = await validate(object);
+
+    // then
+    expect(errors).toEqual({
+      tags: ["Invalid input: expected string, received number"],
+    });
+  });
+
+  it("should keep the first error when a field has several issues", async () => {
+    // given
+    const schema = z.object({
+      password: z.string().min(8, "too short").regex(/\d/, "needs a digit"),
+    });
+    const validate = toFormikValidate(schema);
+
+    // when
+    const errors = await validate({ password: "abc" });
+
+    // then
+    expect(errors).toEqual({ password: "too short" });
+  });
+
+  it("should keep root-level errors under an empty key", async () => {
+    // given
+    const schema = z
+      .object({ a: z.string(), b: z.string() })
+      .refine((v) => v.a === v.b, "must match");
+    const validate = toFormikValidate(schema);
+
+    // when
+    const errors = await validate({ a: "x", b: "y" });
+
+    // then
+    expect(errors).toEqual({ "": "must match" });
+  });
 });
 
 function makeSut() {

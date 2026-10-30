@@ -1,3 +1,4 @@
+import { getIn, setIn, FormikErrors } from "formik";
 import { core, z } from "zod/v4";
 
 export class ValidationError extends Error {
@@ -40,11 +41,22 @@ export function toFormikValidationSchema<T>(
   };
 }
 
-function createValidationResult(error: z.ZodError) {
-  const result: Record<string, string> = {};
+function createValidationResult<T>(error: z.ZodError<T>) {
+  let result: FormikErrors<T> = {};
 
   for (const x of error.issues) {
-    result[x.path.filter(Boolean).join(".")] = x.message;
+    const path = x.path.map(String).join(".");
+
+    // Root-level issues have an empty path, so keep them under the "" key
+    if (!path) {
+      (result as Record<string, unknown>)[""] ??= x.message;
+      continue;
+    }
+
+    // Keep the first message per field, like Formik does for Yup errors
+    if (getIn(result, path) === undefined) {
+      result = setIn(result, path, x.message);
+    }
   }
 
   return result;
