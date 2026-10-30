@@ -53,3 +53,19 @@ const Component = () => (
   </Formik>
 );
 ```
+
+### Zod Mini
+
+Schemas built with [Zod Mini](https://zod.dev/packages/mini) work with both functions too:
+
+```TSX
+import * as z from 'zod/mini';
+import { toFormikValidate } from 'zod-formik-adapter';
+
+const Schema = z.object({
+  name: z.string(),
+  age: z.optional(z.number()),
+});
+
+const validate = toFormikValidate(Schema);
+```

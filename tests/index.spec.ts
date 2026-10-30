@@ -1,4 +1,5 @@
 import { z } from "zod/v4";
+import * as zm from "zod/mini";
 import { toFormikValidationSchema, toFormikValidate } from "../index";
 
 describe("toFormikValidationSchema", () => {
@@ -207,14 +208,117 @@ describe("toFormikValidate", () => {
   });
 });
 
+describe("Zod Mini schemas", () => {
+  it("should pass toFormikValidationSchema without errors", async () => {
+    // given
+    const object = { name: "mock", age: 32 };
+    const { schemaMini } = makeSut();
+    const { validate } = toFormikValidationSchema(schemaMini);
+
+    // when
+    const errors = await validate(object);
+
+    // then
+    expect(errors).toEqual(undefined);
+  });
+
+  it("should fail toFormikValidationSchema with error object", async () => {
+    // given
+    const object = { name: undefined, age: "32" } as any;
+    const { schemaMini } = makeSut();
+    const { validate } = toFormikValidationSchema(schemaMini);
+
+    // when
+    await expect(validate(object)).rejects.toMatchObject({
+      inner: [
+        {
+          path: "name",
+          message: "Invalid input: expected string, received undefined",
+        },
+        {
+          path: "age",
+          message: "Invalid input: expected number, received string",
+        },
+      ],
+    });
+  });
+
+  it("should pass toFormikValidate without errors", async () => {
+    // given
+    const object = { name: "mock", age: 32 };
+    const { schemaMini } = makeSut();
+    const validate = toFormikValidate(schemaMini);
+
+    // when
+    const errors = await validate(object);
+
+    // then
+    expect(errors).toEqual(undefined);
+  });
+
+  it("should fail toFormikValidate with error object", async () => {
+    // given
+    const object = { name: undefined, age: "32" } as any;
+    const { schemaMini } = makeSut();
+    const validate = toFormikValidate(schemaMini);
+
+    // when
+    const errors = await validate(object);
+
+    // then
+    expect(errors).toEqual({
+      name: "Invalid input: expected string, received undefined",
+      age: "Invalid input: expected number, received string",
+    });
+  });
+
+  it("should return nested errors for arrays of objects", async () => {
+    // given
+    const schema = zm.object({
+      items: zm.array(zm.object({ name: zm.string() })),
+    });
+    const object = { items: [{ name: 1 }, { name: "ok" }] } as any;
+    const validate = toFormikValidate(schema);
+
+    // when
+    const errors = await validate(object);
+
+    // then
+    expect(errors).toEqual({
+      items: [{ name: "Invalid input: expected string, received number" }],
+    });
+  });
+
+  it("should rethrow errors that are not zod errors", async () => {
+    // given
+    const schema = zm.object({ name: zm.string() }).check(() => {
+      throw new Error("unexpected failure");
+    });
+    const { validate } = toFormikValidationSchema(schema);
+
+    // when
+    await expect(validate({ name: "mock" })).rejects.toThrow(
+      "unexpected failure"
+    );
+    await expect(toFormikValidate(schema)({ name: "mock" })).rejects.toThrow(
+      "unexpected failure"
+    );
+  });
+});
+
 function makeSut() {
   const schema = z.object({
     name: z.string(), // obrigatory name
     age: z.number().optional(), // optional age
   });
+  const schemaMini = zm.object({
+    name: zm.string(), // obrigatory name
+    age: zm.optional(zm.number()), // optional age
+  });
 
   return {
     schema,
+    schemaMini,
   };
 }
 
