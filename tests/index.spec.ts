@@ -36,6 +36,16 @@ describe("toFormikValidationSchema", () => {
     // when
     await expect(validate(object)).rejects.toMatchObject(error);
   });
+
+  it("should rethrow errors that are not zod errors", async () => {
+    // given
+    const object = { name: "mock" };
+    const { schema } = makeThrowingSut();
+    const { validate } = toFormikValidationSchema(schema);
+
+    // when
+    await expect(validate(object)).rejects.toThrow("unexpected failure");
+  });
 });
 
 describe("toFormikValidate", () => {
@@ -152,12 +162,32 @@ describe("toFormikValidate", () => {
     // then
     expect(errors).toEqual({ "": "must match" });
   });
+
+  it("should rethrow errors that are not zod errors", async () => {
+    // given
+    const object = { name: "mock" };
+    const { schema } = makeThrowingSut();
+    const validate = toFormikValidate(schema);
+
+    // when
+    await expect(validate(object)).rejects.toThrow("unexpected failure");
+  });
 });
 
 function makeSut() {
   const schema = z.object({
     name: z.string(), // obrigatory name
     age: z.number().optional(), // optional age
+  });
+
+  return {
+    schema,
+  };
+}
+
+function makeThrowingSut() {
+  const schema = z.object({ name: z.string() }).refine(() => {
+    throw new Error("unexpected failure");
   });
 
   return {

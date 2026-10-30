@@ -35,6 +35,9 @@ export function toFormikValidationSchema<T>(
       try {
         await schema.parseAsync(obj, params);
       } catch (err: unknown) {
+        if (!(err instanceof core.$ZodError)) {
+          throw err;
+        }
         throw createValidationError(err as z.ZodError<T>);
       }
     },
